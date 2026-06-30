@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRQ Deals — Sarasota's Best Local Deals, Free Every Week</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --palm:   #1A3A2A;
+    --gulf:   #0077A8;
+    --sunset: #E8612A;
+    --sand:   #F5EDD8;
+    --chalk:  #FAFAF7;
+    --white:  #FFFFFF;
+    --ink:    #1C1C1C;
+    --muted:  #6B6B6B;
+    --border: #E2DCCF;
+    --light-blue: #EAF4FA;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--chalk); color: var(--ink); line-height: 1.6; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 60px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.35rem; color: var(--palm); text-decoration: none; }
+  .logo span { color: var(--sunset); }
+  .nav-right { display: flex; align-items: center; gap: 20px; }
+  .nav-link { color: var(--muted); font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: color 0.2s; }
+  .nav-link:hover { color: var(--ink); }
+  .nav-signup {
+    background: var(--sunset); color: var(--white);
+    padding: 8px 18px; border-radius: 6px;
+    font-size: 0.875rem; font-weight: 600; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-signup:hover { background: #cf4f1f; }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--palm);
+    padding: 70px 5vw 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Subtle dot grid texture */
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+  .hero-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--sand); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 100px; margin-bottom: 28px;
+  }
+  .pill-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+    line-height: 1.1; color: var(--white); margin-bottom: 20px;
+  }
+  .hero h1 em { font-style: normal; color: var(--sunset); }
+  .hero-sub { color: rgba(255,255,255,0.65); font-size: 1.05rem; margin-bottom: 44px; max-width: 520px; margin-left: auto; margin-right: auto; }
+
+  /* Newsletter signup inline */
+  .signup-box {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 28px 32px;
+    max-width: 500px;
+    margin: 0 auto;
+    backdrop-filter: blur(6px);
+  }
+  .signup-label { color: var(--sand); font-size: 0.9rem; font-weight: 600; margin-bottom: 14px; }
+  .signup-row { display: flex; gap: 8px; }
+  .signup-input {
+    flex: 1; padding: 12px 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    color: var(--white); font-size: 0.9rem;
+    outline: none; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s;
+  }
+  .signup-input::placeholder { color: rgba(255,255,255,0.4); }
+  .signup-input:focus { border-color: rgba(255,255,255,0.5); }
+  .signup-btn {
+    background: var(--sunset); color: var(--white);
+    padding: 12px 22px; border: none; border-radius: 8px;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .signup-btn:hover { background: #cf4f1f; }
+  .signup-note { color: rgba(255,255,255,0.4); font-size: 0.75rem; margin-top: 10px; }
+
+  /* success state */
+  .signup-success {
+    display: none;
+    color: #4ade80; font-weight: 600; font-size: 0.95rem;
+    padding: 10px 0;
+  }
+
+  /* ── TICKER ── */
+  .ticker {
+    background: var(--gulf); color: var(--white);
+    padding: 9px 0; overflow: hidden;
+    font-size: 0.8rem; font-weight: 500; white-space: nowrap;
+  }
+  .ticker-track { display: inline-flex; gap: 56px; animation: scroll 32s linear infinite; }
+  .ticker-track span::before { content: '📍 '; }
+  @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── MAIN LAYOUT ── */
+  .page-body { display: grid; grid-template-columns: 1fr 300px; gap: 40px; max-width: 1180px; margin: 0 auto; padding: 48px 5vw; }
+  @media (max-width: 900px) { .page-body { grid-template-columns: 1fr; } .sidebar { display: none; } }
+
+  /* ── DEALS FEED ── */
+  .feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .feed-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--palm); }
+  .feed-meta { font-size: 0.8rem; color: var(--muted); }
+  .refresh-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 600; color: var(--gulf); background: var(--light-blue); padding: 4px 10px; border-radius: 100px; }
+
+  /* Category chips */
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+  .chip {
+    padding: 7px 16px; border-radius: 100px;
+    border: 1px solid var(--border); background: var(--white);
+    font-size: 0.8rem; font-weight: 500; cursor: pointer;
+    color: var(--muted); transition: all 0.15s;
+  }
+  .chip:hover, .chip.active { background: var(--palm); border-color: var(--palm); color: var(--white); }
+
+  /* Deal cards */
+  .deals-list { display: flex; flex-direction: column; gap: 16px; }
+
+  .deal-row {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    display: grid; grid-template-columns: 90px 1fr auto;
+    transition: box-shadow 0.2s, transform 0.15s;
+    text-decoration: none; color: inherit;
+  }
+  .deal-row:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-1px); }
+
+  .deal-thumb-sm {
+    background: var(--sand);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    min-height: 90px;
+  }
+  .deal-content { padding: 14px 16px; }
+  .deal-source { font-size: 0.68rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--gulf); margin-bottom: 4px; }
+  .deal-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--palm); margin-bottom: 3px; line-height: 1.3; }
+  .deal-biz { font-size: 0.78rem; color: var(--muted); margin-bottom: 8px; }
+  .deal-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .deal-tag { font-size: 0.68rem; background: #F0F9FF; color: var(--gulf); padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+  .deal-tag-exp { background: #FFF3ED; color: var(--sunset); }
+
+  .deal-right { padding: 14px 18px 14px 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; min-width: 100px; }
+  .deal-discount { font-size: 1.3rem; font-weight: 700; color: var(--sunset); font-family: 'Playfair Display', serif; white-space: nowrap; }
+  .deal-original { font-size: 0.78rem; color: var(--muted); text-decoration: line-through; }
+  .deal-cta {
+    background: var(--palm); color: var(--white);
+    font-size: 0.75rem; font-weight: 600;
+    padding: 7px 14px; border-radius: 6px;
+    white-space: nowrap; text-decoration: none;
+    transition: background 0.18s;
+  }
+  .deal-cta:hover { background: var(--gulf); }
+
+  /* load more */
+  .load-more-wrap { text-align: center; margin-top: 28px; }
+  .load-more {
+    border: 1.5px solid var(--border); background: var(--white);
+    color: var(--palm); font-size: 0.88rem; font-weight: 600;
+    padding: 12px 32px; border-radius: 8px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all 0.18s;
+  }
+  .load-more:hover { border-color: var(--palm); background: var(--palm); color: var(--white); }
+
+  /* ── SIDEBAR ── */
+  .sidebar { display: flex; flex-direction: column; gap: 24px; }
+
+  .sidebar-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px;
+  }
+  .sidebar-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--palm); margin-bottom: 14px; }
+
+  /* sidebar newsletter */
+  .sb-signup input {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border); border-radius: 7px;
+    font-size: 0.875rem; font-family: 'DM Sans', sans-serif;
+    outline: none; margin-bottom: 10px; transition: border-color 0.2s;
+  }
+  .sb-signup input:focus { border-color: var(--gulf); }
+  .sb-signup button {
+    width: 100%; background: var(--sunset); color: var(--white);
+    border: none; border-radius: 7px; padding: 11px;
+    font-size: 0.875rem; font-weight: 600; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+  }
+  .sb-signup button:hover { background: #cf4f1f; }
+  .sb-note { font-size: 0.72rem; color: var(--muted); margin-top: 8px; text-align: center; }
+  .sb-success { display: none; color: #16a34a; font-weight: 600; font-size: 0.875rem; text-align: center; padding: 8px; }
+
+  /* top categories */
+  .cat-list { list-style: none; }
+  .cat-list li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
+  .cat-list li:last-child { border-bottom: none; }
+  .cat-count { font-size: 0.75rem; color: var(--muted); background: var(--chalk); padding: 2px 8px; border-radius: 100px; }
+
+  /* hot deal highlight */
+  .hot-deal { background: var(--palm); border-radius: 10px; padding: 18px; color: var(--white); }
+  .hot-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sunset); margin-bottom: 10px; }
+  .hot-title { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 6px; }
+  .hot-biz { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin-bottom: 14px; }
+  .hot-discount { font-size: 2rem; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--sunset); margin-bottom: 14px; }
+  .hot-btn { display: block; text-align: center; background: var(--sunset); color: var(--white); text-decoration: none; padding: 10px; border-radius: 7px; font-size: 0.82rem; font-weight: 600; transition: background 0.2s; }
+  .hot-btn:hover { background: #cf4f1f; }
+
+  /* ── WHY SUBSCRIBE section ── */
+  .why-section { background: var(--sand); padding: 64px 5vw; text-align: center; }
+  .why-section .sec-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gulf); margin-bottom: 10px; }
+  .why-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 3vw, 2.4rem); color: var(--palm); margin-bottom: 48px; }
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }
+  .why-card { background: var(--white); border-radius: 12px; padding: 28px 22px; border: 1px solid var(--border); text-align: left; }
+  .why-icon { font-size: 1.8rem; margin-bottom: 14px; }
+  .why-card h3 { font-size: 1rem; font-weight: 600; color: var(--palm); margin-bottom: 8px; }
+  .why-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
+
+  /* ── BOTTOM CTA ── */
+  .bottom-cta { background: var(--gulf); color: var(--white); padding: 64px 5vw; text-align: center; }
+  .bottom-cta h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin-bottom: 14px; }
+  .bottom-cta p { color: rgba(255,255,255,0.7); margin-bottom: 36px; font-size: 1rem; }
+  .bottom-signup { display: flex; gap: 8px; max-width: 440px; margin: 0 auto; }
+  .bottom-signup input {
+    flex: 1; padding: 13px 16px; border: none; border-radius: 8px;
+    font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none;
+  }
+  .bottom-signup button {
+    background: var(--palm); color: var(--white); border: none;
+    padding: 13px 24px; border-radius: 8px; font-size: 0.9rem;
+    font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s; white-space: nowrap;
+  }
+  .bottom-signup button:hover { background: #0f2619; }
+  .bottom-note { color: rgba(255,255,255,0.4); font-size: 0.75rem; margin-top: 10px; }
+  .bottom-success { display: none; color: #4ade80; font-weight: 600; margin-top: 10px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--palm); color: rgba(255,255,255,0.55);
+    padding: 44px 5vw 24px;
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+  }
+  .footer-brand .logo { color: var(--sand); display: inline-block; margin-bottom: 10px; }
+  .footer-brand p { font-size: 0.82rem; line-height: 1.7; max-width: 280px; }
+  .footer-col h4 { color: var(--white); font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; }
+  .footer-col a { display: block; color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; margin-bottom: 8px; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom { background: var(--palm); border-top: 1px solid rgba(255,255,255,0.08); padding: 16px 5vw; text-align: center; font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+  @media (max-width: 640px) { footer { grid-template-columns: 1fr; } .signup-row { flex-direction: column; } .bottom-signup { flex-direction: column; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">SRQ<span>Deals</span></a>
+  <div class="nav-right">
+    <a class="nav-link" href="#deals">This Week</a>
+    <a class="nav-link" href="#why">Why Subscribe</a>
+    <a class="nav-signup" href="#newsletter">Get Free Deals →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-pill">
+      <span class="pill-dot"></span>
+      Updated every Monday morning
+    </div>
+    <h1>Sarasota's best local deals,<br><em>delivered free</em> to your inbox.</h1>
+    <p class="hero-sub">We scan Sarasota every week and hand-pick the best deals from local restaurants, shops, spas, and services — so you don't have to.</p>
+
+    <div class="signup-box" id="newsletter">
+      <div class="signup-label">Join 4,800+ Sarasota locals. Free, every Monday.</div>
+      <div class="signup-row">
+        <input class="signup-input" id="hero-email" type="email" placeholder="your@email.com">
+        <button class="signup-btn" onclick="heroSignup()">Send Me Deals</button>
+      </div>
+      <div class="signup-success" id="hero-success">🎉 You're in! Check your inbox Monday morning.</div>
+      <div class="signup-note">No spam. Unsubscribe any time. 100% free.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>Siesta Key Beach Rentals — 25% off paddleboards this weekend</span>
+    <span>Mattison's Riverwalk — Happy Hour 2-for-1 cocktails Mon–Fri</span>
+    <span>Sarasota Jungle Gardens — family tickets from $12</span>
+    <span>Azure Day Spa — $40 off couples massage through Sunday</span>
+    <span>Perq Coffee Bar — free pastry with any large drink this week</span>
+    <span>Gulf Coast Surf Co. — 30% off full-day board rentals</span>
+    <span>Siesta Key Beach Rentals — 25% off paddleboards this weekend</span>
+    <span>Mattison's Riverwalk — Happy Hour 2-for-1 cocktails Mon–Fri</span>
+    <span>Sarasota Jungle Gardens — family tickets from $12</span>
+    <span>Azure Day Spa — $40 off couples massage through Sunday</span>
+    <span>Perq Coffee Bar — free pastry with any large drink this week</span>
+    <span>Gulf Coast Surf Co. — 30% off full-day board rentals</span>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="page-body" id="deals">
+
+  <!-- DEALS FEED -->
+  <main>
+    <div class="feed-header">
+      <div>
+        <div class="feed-title">This Week's Deals</div>
+        <div class="feed-meta">Week of June 28 – July 4, 2026</div>
+      </div>
+      <span class="refresh-tag">🔄 New deals added Monday</span>
+    </div>
+
+    <div class="chips">
+      <button class="chip active" onclick="filterDeals('all', this)">All</button>
+      <button class="chip" onclick="filterDeals('food', this)">🍽 Food & Drink</button>
+      <button class="chip" onclick="filterDeals('wellness', this)">💆 Wellness</button>
+      <button class="chip" onclick="filterDeals('activities', this)">🏖 Activities</button>
+      <button class="chip" onclick="filterDeals('shopping', this)">🛍 Shopping</button>
+      <button class="chip" onclick="filterDeals('services', this)">🏠 Services</button>
+    </div>
+
+    <div class="deals-list" id="deals-list">
+
+      <a class="deal-row" href="#" data-cat="food">
+        <div class="deal-thumb-sm">🍝</div>
+        <div class="deal-content">
+          <div class="deal-source">Food & Drink</div>
+          <div class="deal-name">3-Course Italian Dinner for Two</div>
+          <div class="deal-biz">📍 Café Baci · Downtown Sarasota</div>
+          <div class="deal-tags">
+            <span class="deal-tag">Dine-in</span>
+            <span class="deal-tag">Date night</span>
+            <span class="deal-tag deal-tag-exp">Expires Jul 6</span>
+          </div>
+        </div>
+        <div class="deal-right">
+          <div>
+            <div class="deal-discount">45% OFF</div>
+            <div class="deal-original">Was $90</div>
+          </div>
+          <span class="deal-cta">View Deal</span>
+        </div>
+      </a>
+
+      <a class="deal-row" href="#" data-cat="wellness">
+        <div class="deal-thumb-sm">💆</div>
+        <div class="deal-content">
+          <div class="deal-source">Wellness</div>
+          <div class="deal-name">90-Minute Couples Massage</div>
+          <div class="deal-biz">📍 Azure Day Spa · Southside Village</div>
+          <div class="deal-tags">
+            <span class="deal-tag">Booking required</span>
+            <span class="deal-tag">Couples</span>
+            <span class="deal-tag deal-tag-exp">Expires Jul 6</span>
+          </div>
+        </div>
+        <div class="deal-right">
+          <div>
+            <div class="deal-discount">$70 OFF</div>
+            <div class="deal-original">Was $180</div>
+          </div>
+          <span class="deal-cta">View Deal</span>
+        </div>
+      </a>
+
+      <a class="deal-row" href="#" data-cat="activities">
+        <div class="deal-thumb-sm">🚤</div>
+        <div class="deal-content">
+          <div class="deal-source">Activities</div>
+          <div class="deal-name">Sunset Dolphin Boat Tour</div>
+          <div class="deal-biz">📍 SRQ Adventures · Marina Jack</div>
+          <div class="deal-tags">
+            <span class="deal-tag">Family-friendly</span>
+            <span class="deal-tag">Outdoor</span>
+            <span class="deal-tag deal-tag-exp">Expires Jul 4</span>
+          </div>
+        </div>
+        <div class="deal-right">
+          <div>
+            <div class="deal-discount">38% OFF</div>
+            <div class="deal-original">Was $45</div>
+          </div>
+          <span class="deal-cta">View Deal</span>
+        </div>
+      </a>
+
+      <a class="deal-row" href="#" data-cat="food">
+        <div class="deal-thumb-sm">☕</div>
+        <div class="deal-content">
+          <div class="deal-source">Food & Drink</div>
+          <div class="deal-name">Free Pastry with Any Large Drink</div>
+          <div class="deal-biz">📍 Perq Coffee Bar · Rosemary District</div>
+          <div class="deal-tags">
+            <span class="deal-tag">Walk-in</span>
+            <span class="deal-tag">Show coupon</span>
+            <span class="deal-tag deal-tag-exp">Expires Jul 6</span>
+          </div>
+        </div>
+        <div class="deal-right">
+          <div>
+            <div class="deal-discount">Free</div>
+            <div class="deal-original">Save $5</div>
+          </div>
+          <span class="deal-cta">View Deal</span>
+        </div>
+      </a>
+
+      <a class="deal-row" href="#" data-cat="activities">
+        <div class="deal-thumb-sm">🏄</div>
+        <div class="deal-content">
+          <div class="deal-source">Activities</div>
+          <div class="deal-name">Full-Day Paddleboard Rental</div>
+          <div class="deal-biz">📍 Gulf Coast Surf Co. · Siesta Key</div>
+          <div class="deal-tags">
+            <span class="deal-tag">Outdoor</span>
+            <span class="deal-tag">Walk-in</span>
+            <span class="deal-tag deal-tag-exp">Expires Jul 7</span>
+          </div>
+        </div>
+        <div class="deal-right">
+          <div>
+            <div class="deal-discount">30% OFF</div>
+            <div class="deal-original">Was $60</div>
+          </div>
+          <span class="deal-cta">View Deal</span>
+        </div>
+      </a>
+
+      <a class="deal-row" href="#" data-cat="wellness">
+        <div class="deal-thumb-sm">🧖</div>
+        <div class="deal-content">
+          <div class="deal-source">Wellness</div>
+          <div class="deal-name">Blowout + Deep Conditioning Treatment</div>
+          <div class="deal-biz">📍 Salon 1800 · Lakewood Ranch</div>
+          <div class="deal-tags">
+            <span class="deal-tag">Appointment</span>
+            <span class="deal-tag deal-tag-exp">Expires Jul 6</span>
+          </div>
+        </div>
+        <div class="deal-right">
+          <div>
+            <div class="deal-discount">44% OFF</div>
+            <div class="deal-original">Was $75</div>
+          </div>
+          <span class="deal-cta">View Deal</span>
+        </div>
+      </a>
+
+      <a class="deal-row" href="#" data-cat="food">
+        <div class="deal-thumb-sm">🍺</div>
+        <div class="deal-content">
+          <div class="deal-source">Food & Drink</div>
+          <div class="deal-name">Happy Hour 2-for-1 Craft Cocktails</div>
+          <div class="deal-biz">📍 Mattison's Riverwalk · Downtown</div>
+          <div class="deal-tags">
+            <span class="deal-tag">Mon–Fri 4–7pm</span>
+            <span class="deal-tag">Walk-in</span>
+            <span class="deal-tag deal-tag-exp">Ongoing</span>
+          </div>
+        </div>
+        <div class="deal-right">
+          <div>
+            <div class="deal-discount">50% OFF</div>
+            <div class="deal-original">2nd drink free</div>
+          </div>
+          <span class="deal-cta">View Deal</span>
+        </div>
+      </a>
+
+      <a class="deal-row" href="#" data-cat="shopping">
+        <div class="deal-thumb-sm">🛍</div>
+        <div class="deal-content">
+          <div class="deal-source">Shopping</div>
+          <div class="deal-name">20% Off Entire Purchase In-Store</div>
+          <div class="deal-biz">📍 Tide & Twine Gift Co. · St. Armands Circle</div>
+          <div class="deal-tags">
+            <span class="deal-tag">Show code</span>
+            <span class="deal-tag">Local gift shop</span>
+            <span class="deal-tag deal-tag-exp">Expires Jul 5</span>
+          </div>
+        </div>
+        <div class="deal-right">
+          <div>
+            <div class="deal-discount">20% OFF</div>
+            <div class="deal-original">Storewide</div>
+          </div>
+          <span class="deal-cta">View Deal</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- gate: show more requires email -->
+    <div class="load-more-wrap">
+      <button class="load-more" onclick="gateSignup()">Load More Deals ↓</button>
+    </div>
+
+    <!-- signup gate modal -->
+    <div id="gate-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:16px;padding:36px;max-width:420px;width:90%;position:relative;">
+        <button onclick="document.getElementById('gate-modal').style.display='none'" style="position:absolute;top:14px;right:18px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#6B6B6B;">✕</button>
+        <div style="font-size:1.6rem;margin-bottom:10px;">🌴</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#1A3A2A;margin-bottom:8px;">Want to see more deals?</div>
+        <p style="font-size:0.88rem;color:#6B6B6B;margin-bottom:22px;">Subscribe free and get all of Sarasota's best deals delivered to your inbox every Monday.</p>
+        <input id="gate-email" type="email" placeholder="your@email.com" style="width:100%;padding:12px 14px;border:1px solid #E2DCCF;border-radius:8px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:10px;">
+        <button onclick="gateConfirm()" style="width:100%;background:#E8612A;color:#fff;border:none;border-radius:8px;padding:13px;font-size:0.9rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Get Free Weekly Deals</button>
+        <div id="gate-success" style="display:none;color:#16a34a;font-weight:600;font-size:0.9rem;text-align:center;margin-top:12px;">🎉 You're in! All deals are now unlocked.</div>
+        <div style="font-size:0.72rem;color:#6B6B6B;text-align:center;margin-top:10px;">No spam. Unsubscribe any time.</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-card">
+      <div class="hot-deal">
+        <div class="hot-label">🔥 Deal of the Week</div>
+        <div class="hot-title">90-Min Couples Massage</div>
+        <div class="hot-biz">Azure Day Spa · Southside Village</div>
+        <div class="hot-discount">$70 OFF</div>
+        <a href="#" class="hot-btn">Claim Before It's Gone</a>
+      </div>
+    </div>
+
+    <div class="sidebar-card sb-signup">
+      <div class="sidebar-title">📬 Get deals in your inbox</div>
+      <p style="font-size:0.82rem;color:#6B6B6B;margin-bottom:14px;">Free every Monday. Hand-picked from across Sarasota.</p>
+      <input id="sb-email" type="email" placeholder="your@email.com">
+      <button onclick="sbSignup()">Subscribe Free</button>
+      <div class="sb-success" id="sb-success">✓ You're subscribed!</div>
+      <div class="sb-note">No spam · Unsubscribe anytime</div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">🗂 Browse by Category</div>
+      <ul class="cat-list">
+        <li><span>🍽 Food & Drink</span> <span class="cat-count">14 deals</span></li>
+        <li><span>💆 Wellness</span> <span class="cat-count">9 deals</span></li>
+        <li><span>🏖 Activities</span> <span class="cat-count">11 deals</span></li>
+        <li><span>🛍 Shopping</span> <span class="cat-count">7 deals</span></li>
+        <li><span>🏠 Services</span> <span class="cat-count">5 deals</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-card" style="background:var(--light-blue);border-color:#BDE0F0;">
+      <div style="font-size:0.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gulf);margin-bottom:8px;">Did you know?</div>
+      <p style="font-size:0.85rem;color:var(--palm);line-height:1.65;">SRQ Deals subscribers save an average of <strong>$180/month</strong> just from our weekly food & drink picks alone.</p>
+    </div>
+
+  </aside>
+</div>
+
+<!-- WHY SUBSCRIBE -->
+<section class="why-section" id="why">
+  <div class="sec-label">Why SRQ Deals</div>
+  <h2>The easiest way to get more out of Sarasota.</h2>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">🔍</div>
+      <h3>We do the hunting</h3>
+      <p>We scan local business websites, social pages, and in-store promotions every week and pull the best ones into one clean list.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">✅</div>
+      <h3>Every deal is verified</h3>
+      <p>We confirm each deal is live and accurate before it goes out. No expired coupons, no bait-and-switch.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🌴</div>
+      <h3>100% local businesses</h3>
+      <p>Only Sarasota-area businesses make the list. Your spending stays in the community.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">💌</div>
+      <h3>Free, forever</h3>
+      <p>The newsletter is completely free. No membership fees, no paywalls — just deals in your inbox every Monday.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <h2>Get Sarasota's best deals free every Monday.</h2>
+  <p>4,800+ locals already wake up to SRQ Deals in their inbox. Join them.</p>
+  <div class="bottom-signup">
+    <input id="bottom-email" type="email" placeholder="your@email.com">
+    <button onclick="bottomSignup()">Subscribe Free</button>
+  </div>
+  <div class="bottom-note">No spam. Unsubscribe anytime. Always free.</div>
+  <div class="bottom-success" id="bottom-success">🎉 Welcome to the list! See you Monday.</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a class="logo" href="#">SRQ<span style="color:var(--sunset)">Deals</span></a>
+    <p>Hand-picked local deals from Sarasota's best restaurants, shops, spas, and services — delivered free every Monday.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Explore</h4>
+    <a href="#">This Week's Deals</a>
+    <a href="#">Food & Drink</a>
+    <a href="#">Wellness & Spas</a>
+    <a href="#">Activities</a>
+    <a href="#">Shopping</a>
+  </div>
+  <div class="footer-col">
+    <h4>About</h4>
+    <a href="#">How It Works</a>
+    <a href="#">Submit a Deal</a>
+    <a href="#">Contact Us</a>
+    <a href="#">Privacy Policy</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  © 2026 SRQ Deals · Sarasota, Florida · hello@srqdeals.com
+</div>
+
+<script>
+  // Category filter
+  function filterDeals(cat, btn) {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.deal-row').forEach(row => {
+      row.style.display = (cat === 'all' || row.dataset.cat === cat) ? 'grid' : 'none';
+    });
+  }
+
+  // Email signup handlers
+  function heroSignup() {
+    const email = document.getElementById('hero-email').value;
+    if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
+    document.querySelector('.signup-row').style.display = 'none';
+    document.getElementById('hero-success').style.display = 'block';
+    trackSignup(email, 'hero');
+  }
+
+  function sbSignup() {
+    const email = document.getElementById('sb-email').value;
+    if (!email || !email.includes('@')) return;
+    document.getElementById('sb-success').style.display = 'block';
+    trackSignup(email, 'sidebar');
+  }
+
+  function bottomSignup() {
+    const email = document.getElementById('bottom-email').value;
+    if (!email || !email.includes('@')) return;
+    document.getElementById('bottom-success').style.display = 'block';
+    trackSignup(email, 'bottom');
+  }
+
+  // Gate: load more requires signup
+  function gateSignup() {
+    const modal = document.getElementById('gate-modal');
+    modal.style.display = 'flex';
+  }
+
+  function gateConfirm() {
+    const email = document.getElementById('gate-email').value;
+    if (!email || !email.includes('@')) return;
+    document.getElementById('gate-success').style.display = 'block';
+    trackSignup(email, 'gate');
+    setTimeout(() => {
+      document.getElementById('gate-modal').style.display = 'none';
+      document.querySelector('.load-more-wrap').innerHTML = '<p style="color:var(--muted);font-size:0.85rem;text-align:center;">✓ You\'re subscribed! New deals added every Monday.</p>';
+    }, 2000);
+  }
+
+  function trackSignup(email, source) {
+    console.log('Signup:', email, 'Source:', source);
+    // 👉 Connect to Mailchimp / ConvertKit / Klaviyo here
+  }
+
+  // Close gate modal on backdrop click
+  document.getElementById('gate-modal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
